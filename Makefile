@@ -123,6 +123,9 @@ check.dev-container-healthy:
 		exit 1; \
 	fi
 
+inactive_issue_checker:
+	docker compose run --no-deps --entrypoint "python -m scripts.inactive_issue_checker" dev-server
+
 run-dsadmin: ## Runs DSAdmin inside the dev-server container.
 	@docker exec oppia-cloud-datastore /bin/sh -c '../dsadmin --project=dev-project-id --datastore-emulator-host=localhost:8089 &';
 	@echo 'Please visit http://localhost:8080 to access the DSAdmin.';
