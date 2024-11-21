@@ -1,0 +1,54 @@
+name: Check Inactive Issues
+
+on:
+  merge_group:
+    types: [checks_requested]
+  push:
+    branches:
+      - develop
+      - release-*
+  pull_request:
+    branches:
+      - develop
+      - release-*
+
+jobs:
+  check-inactive-issues:
+    name: Check Inactive Issues
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+        
+    - name: Setup Python 3.9.20
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9.20'
+        architecture: 'x64'
+        
+    - name: Merge develop branch into the current branch
+      uses: ./.github/actions/merge
+        
+    - name: Initialize Containers
+      run: |
+        make build
+        make stop
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install PyGithub
+        
+    - name: Check inactive issues
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        python inactive_issue_checker.py
+      
+    - name: Report failure if failed on oppia/oppia develop branch
+      if: ${{ failure() && github.event_name == 'push' && github.repository == 'oppia/oppia' && github.ref == 'refs/heads/develop' }}
+      uses: ./.github/actions/send-webhook-notification
+      with:
+        message: "Inactive issue check failed on the upstream develop branch."
+        webhook-url: ${{ secrets.BUILD_FAILURE_ROOM_WEBHOOK_URL }}
