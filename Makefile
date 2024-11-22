@@ -124,8 +124,6 @@ check.dev-container-healthy:
 	fi
 
 inactive_issue_checker:
-	@echo Debugging Makefile
-	python -m pip install PyGithub
     python scripts/inactive_issue_checker.py
 
 run-dsadmin: ## Runs DSAdmin inside the dev-server container.
