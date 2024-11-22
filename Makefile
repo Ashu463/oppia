@@ -124,8 +124,9 @@ check.dev-container-healthy:
 	fi
 
 inactive_issue_checker:
+	@echo Debugging Makefile
 	python -m pip install PyGithub
-    $(shell which python) scripts/inactive_issue_checker.py
+    python scripts/inactive_issue_checker.py
 
 run-dsadmin: ## Runs DSAdmin inside the dev-server container.
 	@docker exec oppia-cloud-datastore /bin/sh -c '../dsadmin --project=dev-project-id --datastore-emulator-host=localhost:8089 &';
