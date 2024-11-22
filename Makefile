@@ -124,7 +124,10 @@ check.dev-container-healthy:
 	fi
 
 inactive_issue_checker:
-	docker compose run --no-deps --entrypoint "python -m scripts.inactive_issue_checker" dev-server
+	python -m pip install --upgrade pip
+	python -m pip install -r requirements.txt
+	python scripts/inactive_issue_checker.py
+
 
 run-dsadmin: ## Runs DSAdmin inside the dev-server container.
 	@docker exec oppia-cloud-datastore /bin/sh -c '../dsadmin --project=dev-project-id --datastore-emulator-host=localhost:8089 &';

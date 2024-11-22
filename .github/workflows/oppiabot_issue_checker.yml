@@ -29,7 +29,12 @@ jobs:
       run: |
         make build
         make stop
-        
+
+    - name: Debug Python
+      run: |
+        which python
+        python -m pip list
+
     - name: Check inactive issues
       env:
         GITHUB_TOKEN: ${{ secrets.ASHU_GITHUB_TOKEN }}

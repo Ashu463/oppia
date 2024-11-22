@@ -1522,6 +1522,9 @@ zstandard==0.23.0 \
     --hash=sha256:fe3b385d996ee0822fd46528d9f0443b880d4d05528fd26a9119a54ec3f91c69
     # via apache-beam
 
+PyGithub
+requests
+
 # WARNING: The following packages were not pinned, but pip requires them to be
 # pinned when the requirements file includes hashes. Consider using the --allow-unsafe flag.
 # setuptools
