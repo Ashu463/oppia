@@ -22,7 +22,7 @@ import datetime
 import os
 import requests
 
-INACTIVE_DAYS = 0.7
+INACTIVE_DAYS = 0.00007
 
 
 def inactive_issue_checker(
