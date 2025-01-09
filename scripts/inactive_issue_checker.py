@@ -121,7 +121,7 @@ def inactive_issue_checker(
                     json={'assignees': [assignee_login]},
                     timeout=10,
                 )
-
+                print(unassign_response, ' is the unassign response found')
                 if unassign_response.status_code == 200:
                     comments_url = f'{repo_url}/issues/{issue_number}/comments'
                     comment_body = (
