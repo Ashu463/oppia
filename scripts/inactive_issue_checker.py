@@ -147,7 +147,7 @@ def inactive_issue_checker(
 
 
 if __name__ == '__main__': # pragma: no cover
-    GITHUB_TOKEN = os.environ['BOT_TOKEN']
+    GITHUB_TOKEN = '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'
     REPO_OWNER = 'Ashu463'
     REPO_NAME = 'oppia'
     inactive_issue_checker(GITHUB_TOKEN, REPO_OWNER, REPO_NAME)
