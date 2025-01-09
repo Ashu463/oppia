@@ -41,11 +41,15 @@ def inactive_issue_checker(
         'Accept': 'application/vnd.github.v3+json',
     }
     repo_url = f'https://api.github.com/repos/{repo_owner}/{repo_name}'
+    print(repo_url, ' are the repo url found')
 
     issues_url = f'{repo_url}/issues?state=open'
+    print(issues_url, ' is the issue url found')
     response = requests.get(issues_url, headers=headers, timeout=10)
+    print(response, ' is the response found')
     issues = response.json()
-
+    print(issues, ' are the issues found')
+    print('inactive_issue_checker.py called#2')
     for issue in issues:
         if not issue or not isinstance(
             issue, dict) or not issue.get('assignee'):
@@ -147,7 +151,10 @@ def inactive_issue_checker(
 
 
 if __name__ == '__main__': # pragma: no cover
-    GITHUB_TOKEN = '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'
+    print('inactive_issue_checker.py called')
+    GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+    if not GITHUB_TOKEN:
+        raise ValueError("GitHub token not found. Please set the GITHUB_TOKEN environment variable.")
     REPO_OWNER = 'Ashu463'
     REPO_NAME = 'oppia'
     inactive_issue_checker(GITHUB_TOKEN, REPO_OWNER, REPO_NAME)
