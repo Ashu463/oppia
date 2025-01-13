@@ -27,42 +27,10 @@ from PIL import Image # pylint: disable=import-error
 from typing import List, Dict
 
 
-def check_graphicsmagick() -> str:
-    """Verify GraphicsMagick installation
-        and return full path to gm executable.
-    """
-
-    gm_path = shutil.which('gm')
-    if gm_path:
-        return gm_path
-
-    common_paths = [
-        '/usr/bin/gm',
-        '/usr/local/bin/gm',
-        '/opt/homebrew/bin/gm',
-        'C:\\Program Files\\GraphicsMagick\\gm.exe'
-    ]
-
-    for path in common_paths:
-        if os.path.isfile(path):
-            return path
-
-    raise RuntimeError(
-        'GraphicsMagick not found in PATH or common locations.'
-        'Please ensure GraphicsMagick is installed and accessible.\n'
-    )
-
-
 def check_and_compress_images(repo_path) -> any: # type: ignore
     """Check and compress images using GraphicsMagick
         with lossless compression for specific formats.
     """
-
-    try:
-        check_graphicsmagick()
-    except RuntimeError as e:
-        print(f'ERROR: {e}', file=sys.stderr)
-        sys.exit(1)
 
     compressed_images = []
     supported_extensions = {'.png', '.jpg', '.jpeg', '.webp'}
@@ -98,7 +66,6 @@ def check_and_compress_images(repo_path) -> any: # type: ignore
                     result = subprocess.run(
                         cmd, capture_output=True, text=True, check=False
                         )
-
                     if result.returncode == 0 and temp_compressed.exists():
                         original_size = file_path.stat().st_size
                         new_size = temp_compressed.stat().st_size
@@ -120,14 +87,15 @@ def check_and_compress_images(repo_path) -> any: # type: ignore
                                 f'→ {new_size/1024:.1f}KB '
                                 f'({(1 - new_size/original_size)*100:.1f}%)'
                             )
-
+                    else:
+                        print("Compressed image is not smaller than original image")
+                        return compressed_images
         except Exception as e:
             print(f'[ERROR] Could not process {file_path}: {e}')
     return compressed_images
 
 
-def main() -> None:
-    """Main function to check and compress images in the repository."""
+if __name__ == '__main__': # pragma: no cover
     repo_path = pathlib.Path('./assets')
     compressed_images = check_and_compress_images(repo_path)
     i = 1
@@ -140,7 +108,4 @@ def main() -> None:
         print('Summary of compressed images on iteration# ', i)
         print(f'Total space saved: {total_saved} bytes\n')
         i = i + 1
-
-
-if __name__ == '__main__': # pragma: no cover
-    main()
+    
