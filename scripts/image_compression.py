@@ -17,14 +17,12 @@
 """Script to compress images in the repository using GraphicsMagick."""
 
 from __future__ import annotations
-import os
+
 import pathlib
-import shutil
 import subprocess
-import sys
 import tempfile
+
 from PIL import Image # pylint: disable=import-error
-from typing import List, Dict
 
 
 def check_and_compress_images(repo_path) -> any: # type: ignore
