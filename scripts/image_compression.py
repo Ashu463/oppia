@@ -23,17 +23,26 @@ import subprocess
 import tempfile
 
 from PIL import Image # pylint: disable=import-error
+from typing import List, TypedDict, Union
 
 
-def check_and_compress_images(repo_path) -> any: # type: ignore
-    """Check and compress images using GraphicsMagick
-        with lossless compression for specific formats.
-    """
+class CompressedImageInfo(TypedDict):
+    """Type definition for compressed image information."""
 
-    compressed_images = []
+    path: pathlib.Path
+    original_size: int
+    new_size: int
+
+
+def check_and_compress_images(
+        input_path: Union[str, pathlib.Path]
+    ) -> List[CompressedImageInfo]:
+    """Check and compress images using GraphicsMagick."""
+
+    result_images: List[CompressedImageInfo] = []
     supported_extensions = {'.png', '.jpg', '.jpeg', '.webp'}
 
-    for file_path in pathlib.Path(repo_path).glob('**/*.*'):
+    for file_path in pathlib.Path(input_path).glob('**/*.*'):
         if file_path.suffix.lower() not in supported_extensions:
             continue
 
@@ -74,7 +83,7 @@ def check_and_compress_images(repo_path) -> any: # type: ignore
                             with open(file_path, 'wb') as f:
                                 f.write(compressed_data)
 
-                            compressed_images.append({
+                            result_images.append({
                                 'path': file_path,
                                 'original_size': original_size,
                                 'new_size': new_size
@@ -86,24 +95,30 @@ def check_and_compress_images(repo_path) -> any: # type: ignore
                                 f'({(1 - new_size/original_size)*100:.1f}%)'
                             )
                     else:
-                        print("Compressed image is not smaller than original image")
-                        return compressed_images
+                        print(
+                            'Compressed image > original image'
+                        )
+                        return result_images
         except Exception as e:
             print(f'[ERROR] Could not process {file_path}: {e}')
-    return compressed_images
+    return result_images
 
 
-if __name__ == '__main__': # pragma: no cover
+def main() -> None: # pragma: no cover
+    """Main function to compress images in the repository."""
     repo_path = pathlib.Path('./assets')
-    compressed_images = check_and_compress_images(repo_path)
     i = 1
     while i <= 10:
-        total_saved = 0
-        compressed_images = check_and_compress_images(repo_path)
+        space = 0
+        compressed_images = check_and_compress_images(str(repo_path))
         for image in compressed_images:
             saved = image['original_size'] - image['new_size']
-            total_saved += saved
+            space += saved
+
         print('Summary of compressed images on iteration# ', i)
-        print(f'Total space saved: {total_saved} bytes\n')
+        print(f'Total space saved: {space} bytes\n')
         i = i + 1
-    
+
+
+if __name__ == '__main__':  # pragma: no cover
+    main()
