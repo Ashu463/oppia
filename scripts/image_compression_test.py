@@ -16,13 +16,17 @@
 
 """Unit tests for scripts/image_compression.py."""
 
+from __future__ import annotations
+
 import pathlib
 import subprocess
 import unittest
 from unittest import mock
-from typing import List, Tuple, Union
-from PIL import Image
+
 from scripts import image_compression
+
+from PIL import Image
+from typing import List, Tuple, Union
 
 
 class TestImageCompression(unittest.TestCase):
@@ -50,12 +54,20 @@ class TestImageCompression(unittest.TestCase):
 
     def mock_subprocess_run(
         self,
-        cmd: Union[str, List[str]]
-    ) -> subprocess.CompletedProcess[bytes]:
+        cmd: Union[str, List[str]],
+        text: bool = False,
+    ) -> subprocess.CompletedProcess[Union[str, bytes]]:
         """Mock subprocess.run to control its behavior."""
-        class MockResult(subprocess.CompletedProcess[bytes]):
+        class MockResult(subprocess.CompletedProcess[Union[str, bytes]]):
             def __init__(self, returncode: int) -> None:
-                super().__init__(args=cmd, returncode=returncode, stdout=b'', stderr=b'')
+                stdout_val: Union[str, bytes] = '' if text else b''
+                stderr_val: Union[str, bytes] = '' if text else b''
+                super().__init__(
+                    args=cmd,
+                    returncode=returncode,
+                    stdout=stdout_val,
+                    stderr=stderr_val
+                )
 
         if isinstance(cmd, list) and 'gm' in cmd and 'convert' in cmd:
             return MockResult(returncode=0)
@@ -97,7 +109,9 @@ class TestImageCompression(unittest.TestCase):
                 mock_image,
                 Exception('Image open failed')
             ]
-            with mock.patch('subprocess.run', side_effect=self.mock_subprocess_run):
+            with mock.patch(
+                'subprocess.run', side_effect=self.mock_subprocess_run
+            ):
                 compressed_images = image_compression.check_and_compress_images(
                     str(self.test_dir)
                 )
