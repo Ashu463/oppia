@@ -38,7 +38,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
       run: |
-        make inactive_issue_checker
+        python -m pip install --upgrade pip
+        python -m pip install requests
+        python scripts/inactive_issue_checker.py
       
     - name: Report failure if failed on oppia/oppia develop branch
       if: ${{ failure() && github.event_name == 'push' && github.repository == 'oppia/oppia' && github.ref == 'refs/heads/develop' }}

@@ -48,7 +48,6 @@ build: ## Builds the all docker setup.
 
 inactive_issue_checker:
 	python -m pip install --upgrade pip
-	python -m pip install PyGithub
 	python -m pip install requests
 	python scripts/inactive_issue_checker.py
 
