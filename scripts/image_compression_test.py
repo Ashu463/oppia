@@ -19,6 +19,7 @@
 from __future__ import annotations
 
 import pathlib
+import random
 import shutil
 import unittest
 from unittest import mock
@@ -72,7 +73,8 @@ class TestImageCompression(unittest.TestCase):
         """Create a test image with noise to ensure it's compressible."""
         img = Image.new('RGB', size)
         pixels = img.load()
-        import random
+        if pixels is None:
+            raise ValueError('Failed to load pixels from the image.')
         for x in range(size[0]):
             for y in range(size[1]):
                 pixels[x, y] = (
