@@ -98,7 +98,7 @@ def check_and_compress_images(
                         print(
                             'Compressed image > original image'
                         )
-                        return result_images
+                        continue
         except Exception as e:
             print(f'[ERROR] Could not process {file_path}: {e}')
     return result_images

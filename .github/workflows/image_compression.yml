@@ -1,6 +1,5 @@
 name: Image Compression Check
-permissions: 
-  contents : write
+permissions: read-all
 on:
   merge_group:
     types: [checks_requested]
@@ -17,6 +16,10 @@ jobs:
   run_compression:
     name: Run Image Compression Checks
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
 
     steps:
       - name: Checkout repository
@@ -52,7 +55,7 @@ jobs:
         id: compression
         run: |
           make image_compression_check
-          echo "::set-output name=changes_made::$(git status --porcelain | grep -c "M" || echo "0")"
+          echo "changes_made=$(git status --porcelain | grep -c "M" || echo "0")" >> $GITHUB_ENV
 
       - name: Commit and push if images were compressed
         if: steps.compression.outputs.changes_made != '0'
