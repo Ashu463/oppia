@@ -34,7 +34,7 @@ class CompressedImageInfo(TypedDict):
     new_size: int
 
 
-def check_and_compress_images(
+def compress_images(
         input_path: Union[str, pathlib.Path]
     ) -> List[CompressedImageInfo]:
     """Check and compress images using GraphicsMagick."""
@@ -110,7 +110,7 @@ def main() -> None: # pragma: no cover
     i = 1
     while i <= 10:
         space = 0
-        compressed_images = check_and_compress_images(str(repo_path))
+        compressed_images = compress_images(str(repo_path))
         for image in compressed_images:
             saved = image['original_size'] - image['new_size']
             space += saved
