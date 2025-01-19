@@ -119,7 +119,7 @@ class TestImageCompression(unittest.TestCase):
                     img.verify()
             except Exception as e:
                 self.fail(f'Compressed image {path.name} is corrupt: {e}')
-    
+
     def test_already_optimized_image(self) -> None:
         """Test handling of already optimized images."""
         if not shutil.which('gm'):
