@@ -21,18 +21,13 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
           ref: ${{ github.head_ref }}  # Checkout the PR branch
           token: ${{ secrets.BOT_TOKEN }}
         
     - name: Merge develop branch into the current branch
       uses: ./.github/actions/merge
-        
-    - name: Initialize Containers
-      run: |
-        make build
-        make stop
 
     - name: Check inactive issues
       env:
