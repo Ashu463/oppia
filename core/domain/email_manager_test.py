@@ -22,6 +22,7 @@ import types
 
 from core import feconf
 from core.constants import constants
+from core.domain import email_domain
 from core.domain import email_manager
 from core.domain import exp_domain
 from core.domain import html_cleaner
@@ -1329,7 +1330,7 @@ class DuplicateEmailTests(test_utils.EmailTestBase):
                         '<li>', '<li>- ').replace('</p><p>', '</p>\n<p>')
                 cleaned_plaintext_body = html_cleaner.strip_html_tags(
                     raw_plaintext_body)
-                email_models.SentEmailModel.create(
+                email_domain.SentEmail(
                     self.new_user_id, self.NEW_USER_EMAIL,
                     feconf.SYSTEM_COMMITTER_ID, feconf.SYSTEM_EMAIL_ADDRESS,
                     feconf.EMAIL_INTENT_SIGNUP, self.new_email_subject,
@@ -1448,7 +1449,7 @@ class DuplicateEmailTests(test_utils.EmailTestBase):
             ] = email_models.SentEmailModel.get_all().fetch()
             self.assertEqual(len(all_models), 0)
 
-            email_models.SentEmailModel.create(
+            email_domain.SentEmail(
                 'recipient_id', self.NEW_USER_EMAIL,
                 feconf.SYSTEM_COMMITTER_ID, feconf.SYSTEM_EMAIL_ADDRESS,
                 feconf.EMAIL_INTENT_SIGNUP, self.new_email_subject,
@@ -1510,7 +1511,7 @@ class DuplicateEmailTests(test_utils.EmailTestBase):
             ] = email_models.SentEmailModel.get_all().fetch()
             self.assertEqual(len(all_models), 0)
 
-            email_models.SentEmailModel.create(
+            email_domain.SentEmail(
                 self.new_user_id, self.NEW_USER_EMAIL,
                 feconf.SYSTEM_COMMITTER_ID, feconf.SYSTEM_EMAIL_ADDRESS,
                 feconf.EMAIL_INTENT_SIGNUP, '%s%s' % (
@@ -1573,7 +1574,7 @@ class DuplicateEmailTests(test_utils.EmailTestBase):
             ] = email_models.SentEmailModel.get_all().fetch()
             self.assertEqual(len(all_models), 0)
 
-            email_models.SentEmailModel.create(
+            email_domain.SentEmail(
                 self.new_user_id, self.NEW_USER_EMAIL,
                 feconf.SYSTEM_COMMITTER_ID, feconf.SYSTEM_EMAIL_ADDRESS,
                 feconf.EMAIL_INTENT_SIGNUP, self.new_email_subject,
@@ -1640,7 +1641,7 @@ class DuplicateEmailTests(test_utils.EmailTestBase):
             email_sent_time = (
                 datetime.datetime.utcnow() - datetime.timedelta(minutes=4))
 
-            email_models.SentEmailModel.create(
+            email_domain.SentEmail(
                 self.new_user_id, self.NEW_USER_EMAIL,
                 feconf.SYSTEM_COMMITTER_ID, feconf.SYSTEM_EMAIL_ADDRESS,
                 feconf.EMAIL_INTENT_SIGNUP, self.new_email_subject,
@@ -1654,7 +1655,7 @@ class DuplicateEmailTests(test_utils.EmailTestBase):
             email_sent_time = (
                 datetime.datetime.utcnow() - datetime.timedelta(minutes=2))
 
-            email_models.SentEmailModel.create(
+            email_domain.SentEmail(
                 self.new_user_id, self.NEW_USER_EMAIL,
                 feconf.SYSTEM_COMMITTER_ID, feconf.SYSTEM_EMAIL_ADDRESS,
                 feconf.EMAIL_INTENT_SIGNUP, self.new_email_subject,

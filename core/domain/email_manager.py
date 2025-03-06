@@ -25,6 +25,7 @@ from core import feconf
 from core import utils
 from core.constants import constants
 from core.domain import change_domain
+from core.domain import email_domain
 from core.domain import email_services
 from core.domain import html_cleaner
 from core.domain import platform_parameter_list
@@ -565,7 +566,7 @@ def _send_email(
             sender_name_email, recipient_email_address, email_subject,
             cleaned_plaintext_body, cleaned_html_body, bcc_admin=bcc_admin,
             attachments=attachments)
-        email_models.SentEmailModel.create(
+        email_domain.SentEmail(
             recipient_id, recipient_email_address, sender_id, sender_name_email,
             intent, email_subject, cleaned_html_body, datetime.datetime.utcnow()
         )
