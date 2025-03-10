@@ -6770,3 +6770,334 @@ class ExplorationVersionHistory:
             ),
             'committer_ids': self.committer_ids
         }
+
+class ExplorationUserDataDict:
+    user_id: str
+    exploration_id: str
+    rating: int
+    rated_on: datetime
+    draft_change_list: Dict[str, List[str]]
+    draft_change_list_last_updated: datetime
+    draft_change_list_exp_version: int
+    draft_change_list_id: str
+    mute_suggestion_notifications: bool
+    mute_feedback_notifications: bool
+    furthest_reached_checkpoint_state_name: str
+    furthest_reached_checkpoint_exp_version: int
+    most_recently_reached_checkpoint_state_name: str
+    most_recently_reached_checkpoint_exp_version: int
+
+
+class ExplorationUserData:
+    """Domain object for ExplorationUserData."""
+    def __init__(
+        self,
+        user_id: str,
+        exploration_id: str,
+        rating: int,
+        rated_on: datetime,
+        draft_change_list: Dict[str, List[str]],
+        draft_change_list_last_updated: datetime,
+        draft_change_list_exp_version: int,
+        draft_change_list_id: str,
+        mute_suggestion_notifications: bool,
+        mute_feedback_notifications: bool,
+        furthest_reached_checkpoint_state_name: str,
+        furthest_reached_checkpoint_exp_version: int,
+        most_recently_reached_checkpoint_state_name: str,
+        most_recently_reached_checkpoint_exp_version: int
+
+    ) -> None:
+        """Constructs a ExplorationUserData domain object.
+            user_id: str. The id of User.
+            exploration_id: str. The id of Exploration.
+            rating: int. Rating given by user to the exploration after its completion.
+            rated_on: datetime. Most recent rating given by user to exploration.
+            draft_change: DraftChangeListDict. Draft change data by user over exploration.
+            mute_suggestion_notifications: bool. User preference for receiving suggestion emails.
+            mute_feedback_notifications: bool. User preference for receiving feedback emails.
+            furthest_reached_checkpoint_state_name: str. Current state of furthest checkpoint while creation of exploration
+            furthest_reached_checkpoint_exp_version: int. Exploration version of Furthest reached checkpoint.
+            most_recently_reached_checkpoint_state_name: str. State name of most recent reached checkpoint.
+            most_recently_reached_checkpoint_exp_version: int. Exploration version of most recent reached checkpoint.
+        """
+        self.user_id = user_id
+        self.exploration_id = exploration_id
+        self.rating = rating
+        self.rated_on = rated_on
+        self.draft_change_list = draft_change_list
+        self.draft_change_list_last_updated = draft_change_list_last_updated
+        self.draft_change_list_exp_version = draft_change_list_exp_version
+        self.draft_change_list_id = draft_change_list_id
+        self.mute_suggestion_notifications = mute_suggestion_notifications
+        self.mute_feedback_notifications = mute_feedback_notifications
+        self.furthest_reached_checkpoint_state_name = furthest_reached_checkpoint_state_name
+        self.furthest_reached_checkpoint_exp_version = furthest_reached_checkpoint_exp_version
+        self.most_recently_reached_checkpoint_state_name = most_recently_reached_checkpoint_state_name
+        self.most_recently_reached_checkpoint_exp_version = most_recently_reached_checkpoint_exp_version
+    
+    @classmethod
+    def from_dict(cls, exploration_user_dict: ExplorationUserDataDict) -> ExplorationUserData:
+        """Returns a explorationUserData domain object from a dict.
+
+            Args:
+                exploration_user_dict: Dict represents object of Exploration
+                    user dict.
+            Returns:
+                ExplorationUserData: Exploration user data object instance.
+        """
+        return cls(
+            exploration_user_dict['user_id'],
+            exploration_user_dict['exploration_id'],
+            exploration_user_dict['rating'],
+            exploration_user_dict['rated_on'],
+            exploration_user_dict['draft_change_list'],
+            exploration_user_dict['draft_change_list_last_updated'],
+            exploration_user_dict['draft_change_list_exp_version'],
+            exploration_user_dict['draft_change_list_id'],
+            exploration_user_dict['mute_suggestion_notifications'],
+            exploration_user_dict['mute_feedback_notifications'],
+            exploration_user_dict['furthest_reached_checkpoint_state_name'],
+            exploration_user_dict['furthest_reached_checkpoint_exp_version'],
+            exploration_user_dict['most_recently_reached_checkpoint_state_name'],
+            exploration_user_dict['most_recently_reached_checkpoint_exp_version'],
+        )
+    
+    def to_dict(self) -> ExplorationUserDataDict:
+        """Returns a dict representing a exploration User data domain object.
+
+        Returns:
+            ExplorationUserDataDict. A dict, mapping all fields of exploration user data instance.
+        """
+
+        return {
+            'user_id': self.user_id,
+            'exploration_id': self.exploration_id,
+            'rating': self.rating,
+            'rated_on': self.rated_on,
+            'draft_change_list': self.draft_change_list,
+            'draft_change_list_last_updated': self.draft_change_list_last_updated,
+            'draft_change_list_exp_version': self.draft_change_list_exp_version,
+            'draft_change_list_id': self.draft_change_list_id,
+            'mute_suggestion_notifications': self.mute_suggestion_notifications,
+            'mute_feedback_notifications': self.mute_feedback_notifications,
+            'furthest_reached_checkpoint_state_name': self.furthest_reached_checkpoint_state_name,
+            'furthest_reached_checkpoint_exp_version': self.furthest_reached_checkpoint_exp_version,
+            'most_recently_reached_checkpoint_state_name': self.most_recently_reached_checkpoint_state_name,
+            'most_recently_reached_checkpoint_exp_version': self.most_recently_reached_checkpoint_exp_version,
+        }
+    
+    def validate(self, strict: bool) -> None: 
+        """Validate the domain object for ExplorationUserData."""
+
+        if not self.user_id:
+            raise utils.ValidationError(
+                'User Id could not be None.'
+            )
+        if not isinstance(self.user_id, str):
+            raise utils.ValidationError(
+                'User ID should be string.'
+                'But received %s.'% self.user_id
+        )
+        if not self.exploration_id:
+            raise utils.ValidationError(
+                'Exploration Id could not be None.'
+            )
+        if not isinstance(self.exploration_id, str):
+            raise utils.ValidationError(
+                'User ID should be string.'
+                'But received %s.'% self.exploration_id)
+
+        if strict:
+            if not isinstance(self.rating, int):
+                raise utils.ValidationError(
+                    'Excepted rating to be int.'
+                    'But received %s.'% self.rating
+                )
+            if self.rating < 1 or self.rating > 5:
+                raise utils.ValidationError(
+                    'Rating must be in range from 1 to 5.'
+                )
+            if not isinstance(self.rated_on, datetime.datetime):
+                raise utils.ValidationError(
+                    'Expected sent_datetime to be a datetime object.'
+                    'But received: %s'% self.rated_on)
+
+            if self.rated_on.tzinfo is not None:
+                raise utils.ValidationError(
+                    'rated_on should be a naive datetime (no timezone) in UTC')
+
+            if self.rated_on > datetime.datetime.utcnow():
+                raise utils.ValidationError(
+                    'rated_on cannot be in the future')
+            if not isinstance(self.draft_change_list, dict):
+                raise utils.ValidationError(
+                    'Expected draft change list to dict.'
+                    'But recieved %s' %self.draft_change_list
+                )
+            if not isinstance(self.draft_change_list_exp_version, int):
+                raise utils.ValidationError(
+                    'Exploration version for draft change list must be int'
+                    'But recieved: %s'% self.draft_change_list_exp_version
+                )
+            if not isinstance(self.draft_change_list_id, int):
+                raise utils.ValidationError(
+                    'Expected draft change ID to int.'
+                    'But recieved: %s' %self.draft_change_list_id
+                )
+            if (self.draft_change_list_id is not None) and (
+                self.draft_change_list_id < 0):
+                raise utils.ValidationError(
+                    'Draft change ID could not be less than zero.'
+                )
+            if (self.furthest_reached_checkpoint_exp_version is not None) and (
+                self.furthest_reached_checkpoint_exp_version < 1):
+                raise utils.ValidationError("Furthest reached checkpoint exploration version must be a positive integer")
+            
+            if (self.most_recently_reached_checkpoint_exp_version is not None) and (
+                self.most_recently_reached_checkpoint_exp_version < 1):
+                raise utils.ValidationError("Most recently reached checkpoint exploration version must be a positive integer")
+        
+        # rating i.e. should be integer >= 1 and <= 5.
+        # rated on is optional to validate.
+
+
+class ExplorationVoiceArtistsLinkDict:
+    """Dict type for Exploration Voice Artists object."""
+    exp_id: str
+    content_id_to_voiceovers_mapping: Dict[str, Dict[str, Tuple[str, state_domain.VoiceoverDict]]]
+
+class ExplorationVoiceArtistsLink:
+    """Domain object for linking Exploration with voice artists."""
+    
+    def __init__(
+            self,
+            exp_id: str,
+            content_id_to_voiceovers_mapping: Dict[
+                str, Dict[str, Tuple[str, state_domain.VoiceoverDict]]
+            ]
+    ) -> None:
+        """Construct a ExplorationVoiceArtistsLink domain object.
+
+        Args: 
+            exp_id: str. ID of exploration.
+            content_id_to_voiceovers_mapping: Dict. A dict consisting 
+                of content IDs as key and other dicts as value.
+                This other dict consists of a bunch of languages
+                (in which voiceovers of content is made) as keys
+                and a two-tuple as values. First value of tuple
+                is voice artist ID and second value is VoiceOverDict.
+
+        """
+        self.exp_id = exp_id
+        self.content_id_to_voiceovers_mapping = content_id_to_voiceovers_mapping
+    
+    @classmethod
+    def from_dict(
+        cls, exploration_voiceArtists: ExplorationVoiceArtistsLinkDict
+    ) -> ExplorationVoiceArtistsLink:
+        """Returns a explorationVoiceArtistsLink domain object from a dict.
+
+        Args:
+            exploration_voiceArtists: Dict represents object of Exploration
+                voice artists link object.
+
+        Returns:
+            ExplorationUserData: Exploration voice artists link object instance.
+        """
+        return cls(
+            exploration_voiceArtists['exp_id'],
+            exploration_voiceArtists['content_id_to_voiceovers_mapping']
+        )
+    
+    def to_dict(self) -> ExplorationVoiceArtistsLinkDict:
+        """Returns a dict representing a exploration voice artist link
+        data domain object.
+
+        Returns:
+            ExplorationVoiceArtistsLinkDict. A dict, 
+            mapping content ID to respective voice over artist.
+        """
+
+        return {
+            'exp_id': self.exp_id,
+            'content_id_to_voiceovers_mapping': self.content_id_to_voiceovers_mapping,
+        }
+
+    def validate(self, strict: bool) -> None:
+        """Validates attributes of ExplorationVoiceArtistsLink."""
+
+        if not isinstance(self.exp_id, str):
+            raise utils.ValidationError(
+                'Expected exploration id to be string'
+                'But recieved: %s' % self.exp_id
+            )
+        if self.exp_id == '':
+            raise utils.ValidationError(
+                'Exploration ID could not be of zero characters.'
+            )
+        if not isinstance(self.content_id_to_voiceovers_mapping, dict):
+            raise utils.ValidationError(
+                'Expected content_id_to_voiceovers_mapping to be Dict'
+                'But recieved: %s' % self.content_id_to_voiceovers_mapping
+            )
+        # Validating content within content_id_to_voiceovers_mapping dict.
+        for content_id, nested_dict in self.content_id_to_voiceovers_mapping.items():
+            if not isinstance(content_id, str):
+                raise utils.ValidationError(
+                    'Expected exploration id to be string'
+                    'But recieved: %s' % content_id
+                )
+            if not isinstance(nested_dict, dict):
+                raise utils.ValidationError(
+                    'Expected nested dict to be Dict'
+                    'But recieved: %s' % nested_dict
+                )
+            # Validating dicts inside each content.
+            for lang, (artist_id, voiceoverDict) in nested_dict.items():
+                # Validating langauge.
+                if not isinstance(lang, str):
+                    raise utils.ValidationError(
+                    'Expected language to be string'
+                    'But recieved: %s' % lang
+                )
+                if not isinstance(artist_id, str):
+                    raise utils.ValidationError(
+                    'Expected artist id to be string'
+                    'But recieved: %s' % artist_id
+                )
+                # Validating voiceOverDict.
+                if not isinstance(voiceoverDict, dict):
+                    raise utils.ValidationError(
+                        'Expected voiceoverDict to be a dictionary. But received: %s' % voiceoverDict
+                    )
+
+                expected_keys = {'filename', 'file_size', 'needs_update', 'duration_secs'}
+                missing_keys = expected_keys - set(voiceoverDict.keys())
+
+                if missing_keys:
+                    raise utils.ValidationError(
+                        'Missing keys in voiceoverDict: %s' % missing_keys
+                    )
+
+                if not isinstance(voiceoverDict['filename'], str):
+                    raise utils.ValidationError(
+                        'Expected filename to be string. But received: %s' % voiceoverDict['filename']
+                    )
+
+                if not isinstance(voiceoverDict['file_size'], int):
+                    raise utils.ValidationError(
+                        'Expected file size to be int. But received: %s' % voiceoverDict['file_size']
+                    )
+
+                if not isinstance(voiceoverDict['needs_update'], bool):
+                    raise utils.ValidationError(
+                        'Expected needs_update to be bool. But received: %s' % voiceoverDict['needs_update']
+                    )
+
+                if not isinstance(voiceoverDict['duration_secs'], float):
+                    raise utils.ValidationError(
+                        'Expected duration_secs to be float. But received: %s' % voiceoverDict['duration_secs']
+                    )
+
+
