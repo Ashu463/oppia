@@ -313,21 +313,14 @@ jobs:
         id: check_workflow_status
         with:
           jobs: ${{ toJson(needs) }}
-      - name: Leave a comment on the PR if workflow failed
-        if: ${{ steps.check_workflow_status.outputs.WORKFLOW_STATUS == 'failure' }}
-        uses: ./.github/actions/post-comment
-        with:
-          owner: ${{ github.event.repository.owner.login }}
-          repo: ${{ github.event.repository.name }}
-          issue_number: ${{ github.event.number }}
-          message: >
-            🛠️ Hi @${{ github.event.pull_request.user.login }}, it looks like
-            the CI checks are failing on your PR. Please look at the logs and
-            follow [these instructions](https://github.com/oppia/oppia/wiki/If-CI-checks-fail-on-your-PR#introduction)
-            to fix them, or report the error as a flake. Thanks!
       - name: Fail if workflow status is failure
         if: ${{ steps.check_workflow_status.outputs.WORKFLOW_STATUS == 'failure' }}
         run: |
+          echo ""
+          echo "NOTE TO DEVELOPERS: This CI check is failing because another e2e/acceptance/lighthouse full-stack test workflow has failed. Please see that other workflow for the relevant logs to investigate. When all full-stack workflows pass, this CI check will automatically pass."
+          echo ""
+          echo "If all other full-stack workflows have passed and this is the only failure, please file an issue on our issue tracker and link to this log. Thanks!"
+          echo ""
           exit 1
         shell: bash
     permissions:
